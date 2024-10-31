@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<meta charset = "UTF-8">
 <head>
-    <script src="js/Cesium-1.98/Build/Cesium/Cesium.js"></script>
-    <link href="js/Cesium-1.98/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <meta charset="utf-8">
+  <!-- Include the CesiumJS JavaScript and CSS files -->
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.122/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.122/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 </head>
 <body>
-<div id="cesiumContainer" style="width:100%; height:710px"></div>
-<script type="text/javascript">
-	Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1ZTlhMTFjNy1kYzkxLTQxZWUtYTNkZi04ZjkzMjYxOGRlNmIiLCJpZCI6MTEwMDE5LCJpYXQiOjE2NjQ4Njc2NjR9.bO0dc1eG17ZAL2-km12EaBLpNctZxQXfts69COMVI3c';
+  <div id="cesiumContainer"></div>
+  <script type="module">
+    // Your access token can be found at: https://ion.cesium.com/tokens.
+    // This is the default access token from your ion account
+
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmNGZmNWYyMS1lYWVmLTRkYmQtOGUxYy00Yjg5Mzk0YzE4MTMiLCJpZCI6MTEwMDE5LCJpYXQiOjE2NzYyNjEwOTV9.6KDNT4WtI-7HQR_qo7L83kHFhNeskEeLlinRBTkhPNU';
+
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      terrain: Cesium.Terrain.fromWorldTerrain(),
+    });
+
+    const tileset = await Cesium.Cesium3DTileset.fromIonAssetId(1354380);
+    viewer.scene.primitives.add(tileset);
+
+    viewer.flyTo(tileset);
 	
-	// Keep your Cesium.Ion.defaultAccessToken = 'your_token_here' line from above. 
-	// STEP 2 CODE
-	// Initialize the viewer with Cesium World Terrain.
-	const viewer = new Cesium.Viewer('cesiumContainer', {
-	  terrainProvider: Cesium.createWorldTerrain()
-	});
-	// Add Cesium OSM Buildings
-	const buildingsTileset = viewer.scene.primitives.add(Cesium.createOsmBuildings());
-	// Fly the camera to Denver, Colorado at the given longitude, latitude, and height.
-	viewer.camera.flyTo({
-	  destination: Cesium.Cartesian3.fromDegrees(-104.9965, 39.74248, 4000)
-	});
-</script>
+
+	// Add Cesium OSM Buildings, a global 3D buildings layer.
+    const buildingTileset = await Cesium.createOsmBuildingsAsync();
+    viewer.scene.primitives.add(buildingTileset);  
+  </script>
 </body>
 </html>
